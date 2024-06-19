@@ -14,10 +14,22 @@ import com.dicoding.capstone.R
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
+import java.util.Date
+import retrofit2.Callback
+import retrofit2.Call
 import java.util.Locale
+import android.util.Base64
+import com.dicoding.capstone.data.PredictionResponse
+import retrofit2.Response
+import com.dicoding.capstone.data.service.ApiClient
+import com.google.firebase.auth.FirebaseAuth
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 private const val FILENAME_FORMAT = "dd-MM-yyyy"
 
@@ -40,6 +52,12 @@ fun createFile(application: Application): File {
     return File(outputDirectory, "$timeStamp.png")
 }
 
+//fun createFile(context: Context): File {
+//    val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+//    val storageDir = context.getExternalFilesDir(null)
+//    return File.createTempFile("JPEG_${timestamp}_", ".jpg", storageDir)
+//}
+
 fun rotateFile (file: File, isBackCamera: Boolean = false) {
     val matrix = Matrix()
     val bitmap = BitmapFactory.decodeFile(file.path)
@@ -56,13 +74,15 @@ fun uriToFile(selectedImg: Uri, context: Context): File {
     val contentResolver: ContentResolver = context.contentResolver
     val myFile = createTempFile(context)
 
-    val inputStream = contentResolver.openInputStream(selectedImg) as InputStream
-    val outputStream: OutputStream = FileOutputStream(myFile)
-    val buf = ByteArray(1024)
-    var len: Int
-    while (inputStream.read(buf).also { len = it } > 0) outputStream.write(buf, 0, len)
-    outputStream.close()
-    inputStream.close()
+    contentResolver.openInputStream(selectedImg)?.use { inputStream ->
+        FileOutputStream(myFile).use { outputStream ->
+            val buf = ByteArray(1024)
+            var len: Int
+            while (inputStream.read(buf).also { len = it } > 0) {
+                outputStream.write(buf, 0, len)
+            }
+        }
+    } ?: throw IllegalArgumentException("Cannot open input stream for URI: $selectedImg")
 
     return myFile
 }
@@ -97,3 +117,33 @@ fun reduceFileSize(myFile: File): File {
     }
     return myFile
 }
+
+fun Bitmap.toUriString(context: Context): String {
+    val uri = saveBitmapToFile(context, this)
+    return uri.toString()
+}
+
+fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri {
+    val filesDir = context.filesDir
+    val imageFile = File(filesDir, "${System.currentTimeMillis()}.png")
+    val os: FileOutputStream
+    try {
+        os = FileOutputStream(imageFile)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os)
+        os.flush()
+        os.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return Uri.fromFile(imageFile)
+}
+
+
+
+fun Bitmap.toBase64(): String {
+    val byteArrayOutputStream = ByteArrayOutputStream()
+    this.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+    val byteArray = byteArrayOutputStream.toByteArray()
+    return Base64.encodeToString(byteArray, Base64.NO_WRAP)
+}
+

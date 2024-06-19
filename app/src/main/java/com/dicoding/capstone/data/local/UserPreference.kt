@@ -1,4 +1,4 @@
-package com.dicoding.capstone.local.data
+package com.dicoding.capstone.data.local
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -5,39 +5,55 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.capstone.adapter.ClassAdapter
+import com.dicoding.capstone.data.model.ClassModel
 import com.dicoding.capstone.databinding.FragmentHomeBinding
 import com.dicoding.capstone.ui.detail.CameraActivity
-import com.dicoding.capstone.ui.forgotPassword.ForgotPasswordActivity
+import com.dicoding.capstone.ui.detail.DetailActivity
+import com.dicoding.capstone.util.helper.OnClassItemClickListener
+import com.dicoding.capstone.viewModel.ClassListViewModel
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), OnClassItemClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+    private val classListViewModel: ClassListViewModel by viewModels()
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        moveToCamera()
+        setupRecyclerView()
+
+        // Fetch class list from Firestore
+        classListViewModel.fetchClassList()
+
+        // Observe class list and update RecyclerView
+        classListViewModel.classList.observe(viewLifecycleOwner, Observer { classList ->
+            (binding.rvClass.adapter as ClassAdapter).submitList(classList)
+        })
 
         return root
     }
 
-    private fun moveToCamera() {
-        binding.btnCamera.setOnClickListener {
-            val intent = Intent(activity, CameraActivity::class.java)
-            startActivity(intent)
-        }
+    private fun setupRecyclerView() {
+        binding.rvClass.layoutManager = LinearLayoutManager(context)
+        binding.rvClass.adapter = ClassAdapter(emptyList(), this)
+    }
+
+    override fun onClassItemClick(item: ClassModel) {
+        // Handle item click event
+        Toast.makeText(context, "Clicked: ${item.kelas}", Toast.LENGTH_SHORT).show()
+        // Navigate to another activity or fragment
+        val intent = Intent(context, DetailActivity::class.java)
+        intent.putExtra("CLASS_DATA", item)
+        startActivity(intent)
     }
 
     override fun onDestroyView() {

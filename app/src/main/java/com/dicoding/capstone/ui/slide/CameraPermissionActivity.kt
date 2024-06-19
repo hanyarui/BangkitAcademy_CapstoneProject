@@ -2,17 +2,19 @@ package com.dicoding.capstone.ui.slide
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.dicoding.capstone.databinding.ActivityCameraPermissionBinding
+import com.dicoding.capstone.data.theme.SettingPreference
 import com.dicoding.capstone.ui.MainActivity
+import com.dicoding.capstone.ui.tabLayout.ui.profile.ProfileViewModel
+
 class CameraPermissionActivity : AppCompatActivity() {
 
     companion object {
@@ -21,6 +23,10 @@ class CameraPermissionActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityCameraPermissionBinding
+
+//    private val profileViewModel by viewModels<ProfileViewModel> {
+//        ProfileViewModel.Setting(SettingPreference(this))
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +48,16 @@ class CameraPermissionActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
     }
+
+//    private fun getThemeSetting() {
+//        profileViewModel.getTheme().observe(this) {
+//            if (it) {
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//            } else {
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//            }
+//        }
+//    }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED

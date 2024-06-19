@@ -7,10 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.capstone.databinding.ActivityRegisterBinding
-import com.dicoding.capstone.local.data.UserPreference
+import com.dicoding.capstone.data.local.UserPreference
 import com.dicoding.capstone.util.ViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -24,7 +23,7 @@ class RegisterActivity : AppCompatActivity() {
     // ViewModel Declaration
     private val viewModel: AuthViewModel by viewModels {
         val userPreference = UserPreference(this)
-        ViewModelFactory(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance(), userPreference)
+        ViewModelFactory(FirebaseAuth.getInstance(), userPreference)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

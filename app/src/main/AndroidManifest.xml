@@ -6,6 +6,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +19,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Capstone"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.classroom.CreateClassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.classroom.JoinClassActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".ui.slide.CameraPermissionActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.MainActivity"
             android:exported="false" />
@@ -34,12 +48,6 @@
             android:exported="false"
             android:label="@string/title_activity_tab_layout" />
         <activity
-            android:name=".ui.forgotPassword.ChangePasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.forgotPassword.OtpActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.forgotPassword.ForgotPasswordActivity"
             android:exported="false" />
         <activity
@@ -49,7 +57,7 @@
             android:name=".ui.auth.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.slide.CameraPermissionActivity"
+            android:name=".ui.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

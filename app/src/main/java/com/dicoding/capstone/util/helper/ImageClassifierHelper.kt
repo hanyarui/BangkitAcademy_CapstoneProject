@@ -30,7 +30,7 @@ class ImageClassifierHelper(
         setupImageClassifier()
     }
 
-    fun classifyImage(image: ImageProxy) {
+    fun classifyImage(bitmap: Bitmap) {
         if (imageClassifier == null) {
             setupImageClassifier()
         }
@@ -39,17 +39,11 @@ class ImageClassifierHelper(
             .add(ResizeOp(224, 224, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
             .add(CastOp(DataType.UINT8))
             .build()
-        val tensorImage = imageProcessor.process(TensorImage.fromBitmap(toBitmap(image)))
-        val imageProcessingOptions = ImageProcessingOptions.builder()
-            .setOrientation(getOrientationFromRotation(image.imageInfo.rotationDegrees))
-            .build()
+        val tensorImage = imageProcessor.process(TensorImage.fromBitmap(bitmap))
         var inferenceTime = SystemClock.uptimeMillis()
-        val results = imageClassifier?.classify(tensorImage, imageProcessingOptions)
+        val results = imageClassifier?.classify(tensorImage)
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
-        classifierListener?.onResults(
-            results,
-            inferenceTime
-        )
+        classifierListener?.onResults(results, inferenceTime)
     }
 
     private fun setupImageClassifier() {
@@ -94,10 +88,7 @@ class ImageClassifierHelper(
 
     interface ClassifierListener {
         fun onError(error: String)
-        fun onResults(
-            results: List<Classifications>?,
-            inferenceTime: Long
-        )
+        fun onResults(results: List<Classifications>?, inferenceTime: Long)
     }
 
     companion object {

@@ -1,78 +1,69 @@
 package com.dicoding.capstone.ui.detail
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.dicoding.capstone.R
 import com.dicoding.capstone.databinding.ActivityDetailBinding
-import java.io.File
+import com.dicoding.capstone.util.uriToFile
+
+import com.google.firebase.storage.FirebaseStorage
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
+    private var currentImageUri: Uri? = null
+    private val storageRef = FirebaseStorage.getInstance().reference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        supportActionBar?.hide()
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        binding.btnCamera.setOnClickListener { startCameraX() }
-//        binding.btnGallery.setOnClickListener { startGallery() }
+        binding.btnCamera.setOnClickListener { startCameraX() }
+        binding.btnGallery.setOnClickListener { startGallery() }
     }
 
-//    private fun startGallery() {
-//        val intent = Intent()
-//        intent.action = Intent.ACTION_GET_CONTENT
-//        intent.type = "image/*"
-//        val chooser = Intent.createChooser(intent, "Choose a Picture")
-//        launcherIntentGallery.launch(chooser)
-//    }
+    private fun startCameraX() {
+        val intent = Intent(this, CameraActivity::class.java)
+        launcherIntentCamera.launch(intent)
+    }
 
-//    private val launcherIntentGallery = registerForActivityResult(
-//        ActivityResultContracts.StartActivityForResult()
-//    ) { result ->
-//        if (result.resultCode == RESULT_OK) {
-//            val selectedImg = result.data?.data as Uri
-//            selectedImg.let { uri ->
-//                val getFile = uriToFile(uri, this@DetailActivity)
-//                myFile = getFile
-//                binding.iv.setImageURI(uri)
-//            }
-//        }
-//    }
+    private fun startGallery() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        val chooser = Intent.createChooser(intent, "Choose a Picture")
+        launcherIntentGallery.launch(chooser)
+    }
 
-//    private fun startCameraX() {
-//        val intent = Intent(this, CameraActivity::class.java)
-//        launcherIntentCameraX.launch(intent)
-//    }
+    private val launcherIntentCamera = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val imageUri = result.data?.data
+            imageUri?.let {
+                currentImageUri = it
+            }
+        }
+    }
 
-//    private val launcherIntentCameraX = registerForActivityResult(
-//        ActivityResultContracts.StartActivityForResult()
-//    ) {
-//        if (it.resultCode == CAMERA_X_RESULT) {
-//            myFile = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                it.data?.getSerializableExtra("picture", File::class.java)
-//            } else {
-//                it.data?.getSerializableExtra("picture")
-//            } as? File)!!
-//
-//            val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
-//
-//            myFile.let { file ->
-//                if (file != null) {
-//                    rotateFile(file, isBackCamera)
-//                }
-//                intent.putExtra(EXTRA_RESULT, myFile)
-//                if (file != null) {
-//                    binding.ivImgDesc.setImageBitmap(BitmapFactory.decodeFile(file.path))
-//                }
-//            }
-//        }
-//    }
+    private val launcherIntentGallery = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val selectedImg = result.data?.data
+            selectedImg?.let {
+                val resultIntent = Intent(this, ResultActivity::class.java).apply {
+                    putExtra("photoUri", it.toString())
+                }
+                startActivity(resultIntent)
+            } ?: showToast("Failed to get image URI")
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 }

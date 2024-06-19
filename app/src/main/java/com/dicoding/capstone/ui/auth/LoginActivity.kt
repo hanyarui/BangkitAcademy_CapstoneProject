@@ -2,7 +2,6 @@ package com.dicoding.capstone.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -10,10 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.capstone.databinding.ActivityLoginBinding
 import com.dicoding.capstone.ui.forgotPassword.ForgotPasswordActivity
 import com.dicoding.capstone.ui.tabLayout.TabLayoutActivity
-import com.dicoding.capstone.local.data.UserPreference
+import com.dicoding.capstone.data.local.UserPreference
 import com.dicoding.capstone.util.ViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
     // ViewModel Declaration
     private val viewModel: AuthViewModel by viewModels {
         val userPreference = UserPreference(this)
-        ViewModelFactory(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance(), userPreference)
+        ViewModelFactory(FirebaseAuth.getInstance(), userPreference)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,15 +64,14 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            viewModel.loginUser(email, password) { success, message ->
+            viewModel.loginUser(email, password) { success, _ ->
                 if (success) {
                     showToast("Login berhasil")
                     val intent = Intent(this, TabLayoutActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {
-                    showToast("Login gagal: $message")
-                    Log.d("LoginActivity", "Login failed: $message")
+                    showToast("Login gagal: Email atau Password salah")
                 }
             }
         }

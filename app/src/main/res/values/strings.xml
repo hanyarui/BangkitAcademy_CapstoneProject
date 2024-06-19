@@ -6,7 +6,6 @@
     <string name="signin">Sign In</string>
 
 
-
     <!--  Authentication Field  -->
     <string name="full_name">Full Name</string>
     <string name="email_address">Email Address</string>
@@ -61,5 +60,25 @@
     <string name="lanjut">Lanjut</string>
     <string name="silahkan_berikan_izin_kamera_untuk_menggunakan_aplikasi_ini">Silahkan berikan izin mengakses kamera untuk menggunakan aplikasi ini</string>
     <string name="let_s_start_the_journey">Let\'s start the journey</string>
+    <string name="kelas">Kelas</string>
+    <string name="pelajaran">Pelajaran</string>
+    <string name="jadwal">Jadwal</string>
+    <string name="guru">Guru</string>
+    <string name="buat_kelas_baru">Buat Kelas Baru</string>
+    <string name="masukkan_nama_kelas">Masukkan Nama Kelas</string>
+    <string name="mata_pelajaran">Mata Pelajaran</string>
+    <string name="pick_date">Pilih Tanggal</string>
+    <string name="hari_tanggal">Hari / Tanggal</string>
+    <string name="jam">Jam</string>
+    <string name="pilih_jam">Pilih Jam</string>
+    <string name="masukkan_nama_mata_pelajaran">Masukkan Nama Mata Pelajaran</string>
+    <string name="ulangi_setiap_minggu">Ulangi Setiap Minggu</string>
+    <string name="gabung_ke_kelas">Gabung ke Kelas</string>
+    <string name="kode_kelas">Kode Kelas</string>
+    <string name="masukkan_kode_kelas">Masukkan Kode Kelas</string>
+    <string name="logout">Logout</string>
+    <string name="gallery">Gallery</string>
+    <string name="crop_error">Crop Error</string>
+    <string name="time">Time</string>
 
 </resources>

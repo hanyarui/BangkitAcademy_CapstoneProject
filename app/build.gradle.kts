@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     id("org.jetbrains.kotlin.kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -51,7 +52,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.material.v140)
     implementation(libs.androidx.navigation.fragment.ktx.v277)
     implementation(libs.androidx.navigation.ui.ktx.v277)
     implementation(libs.androidx.navigation.dynamic.features.fragment)
@@ -63,15 +63,20 @@ dependencies {
 
     // Room
     implementation(libs.androidx.room.runtime)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.storage)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 
     // Glide
     implementation(libs.glide)
+
+    implementation(libs.ucrop)
 
     // Camera
     implementation(libs.androidx.camera.core)
@@ -94,14 +99,18 @@ dependencies {
 
     // Firebase Firestore
     implementation(libs.firebase.firestore.ktx)
-    implementation (libs.at.bcrypt)
+    implementation(libs.at.bcrypt)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
+    implementation(libs.firebase.storage)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+//    implementation(project(":opencv"))
 }

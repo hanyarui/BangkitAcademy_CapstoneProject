@@ -8,49 +8,89 @@
     tools:context=".ui.detail.ResultActivity">
 
     <ImageView
-        android:id="@+id/ivPhotos"
+        android:id="@+id/ivResult"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:contentDescription="@string/upload_picture"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tvInferenceTime"
         tools:src="@tools:sample/avatars" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvResult"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvInferenceTime"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivPhotos" />
+        android:layout_marginStart="12dp"
+        android:text="@string/time"
+        app:layout_constraintTop_toBottomOf="@id/ivResult"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <com.dicoding.capstone.util.custom.OverlayView
+        android:id="@+id/overlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginVertical="16dp"
-        android:layout_marginHorizontal="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnConfirm"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/ivResult"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ScrollView
+        android:id="@+id/svResult"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvResult" >
+        app:layout_constraintTop_toBottomOf="@+id/tvInferenceTime">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clIside"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textAlignment="inherit"
-            android:hint="@string/description"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvResult"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/clIside" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/lytDescription"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginHorizontal="12dp"-->
+<!--        android:layout_marginVertical="16dp"-->
+<!--        android:layout_marginTop="14dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/btnConfirm"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/svResult">-->
+
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:hint="@string/description"-->
+<!--            android:inputType="text"-->
+<!--            android:gravity="top"-->
+<!--            android:textAlignment="inherit" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnConfirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginHorizontal="12dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/btn_signin"
         android:text="@string/konfirmasi"

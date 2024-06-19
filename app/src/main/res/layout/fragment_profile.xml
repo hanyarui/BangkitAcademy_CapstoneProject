@@ -4,33 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="12dp"
+    android:paddingHorizontal="12dp"
+    android:paddingBottom="?android:actionBarSize"
     tools:context=".ui.tabLayout.ui.profile.ProfileFragment">
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:thumb="@drawable/thumb_layerlist"
-        android:textSize="18sp"
-        android:text="@string/light_theme"
-        android:textOff="@string/light_theme"
-        android:textOn="@string/dark_theme"
-        app:track="@drawable/track_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <androidx.appcompat.widget.SwitchCompat-->
+<!--        android:id="@+id/switchTheme"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:thumb="@drawable/thumb_layerlist"-->
+<!--        android:textSize="18sp"-->
+<!--        android:text="@string/light_theme"-->
+<!--        android:textOff="@string/light_theme"-->
+<!--        android:textOn="@string/dark_theme"-->
+<!--        app:track="@drawable/track_background"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <TextView
-        android:id="@+id/text_notifications"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLogout"
+        style="@style/TextContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/btn_signin"
+        android:elevation="16dp"
+        android:paddingVertical="12dp"
+        android:text="@string/logout"
+        android:textColor="@color/white"
+        android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
