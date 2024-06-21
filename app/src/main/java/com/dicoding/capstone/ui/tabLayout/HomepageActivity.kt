@@ -32,28 +32,15 @@ class HomepageActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home,
-                R.id.navigation_add,
                 R.id.navigation_notifications
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        setActionBarTitleWithUsername()
-
         val btnAdd: FloatingActionButton = findViewById(R.id.btnAdd)
         btnAdd.setOnClickListener {
             showAddClassDialog()
-        }
-    }
-
-    private fun setActionBarTitleWithUsername() {
-        val userPreference = UserPreference(this)
-        val username = userPreference.getUserName()
-        if (username != null) {
-            supportActionBar?.title = "$username"
-        } else {
-            supportActionBar?.title = "Homepage"
         }
     }
 

@@ -14,7 +14,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.dicoding.capstone.R
 import com.dicoding.capstone.databinding.ActivityCreateClassBinding
 import com.dicoding.capstone.data.local.UserPreference
+import com.dicoding.capstone.data.service.ApiService
 import com.dicoding.capstone.ui.tabLayout.HomepageActivity
+import com.dicoding.capstone.util.ViewModelFactory
 import com.dicoding.capstone.viewModel.CreateClassViewModel
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*
@@ -26,16 +28,13 @@ class CreateClassActivity : AppCompatActivity() {
     private lateinit var etKelas: TextInputEditText
     private lateinit var etMapel: TextInputEditText
 
-    // Inisialisasi ViewModel
+    // Inisialisasi ViewModel dengan ViewModelFactory
     private val createClassViewModel: CreateClassViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val viewModel = CreateClassViewModel()
-                viewModel.initialize(this@CreateClassActivity) // Inisialisasi dengan context
-                @Suppress("UNCHECKED_CAST")
-                return viewModel as T
-            }
-        }
+        ViewModelFactory(
+            context = this,
+            userPreference = UserPreference(this),
+            apiService = ApiService.instance
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +47,22 @@ class CreateClassActivity : AppCompatActivity() {
         etKelas = findViewById(R.id.etKelas)
         etMapel = findViewById(R.id.etMapel)
 
+        // Set Action Bar Title with Username
+        setActionBarTitleWithUsername()
+
         // Button Save
         btnSave.setOnClickListener {
             saveSchedule()
+        }
+    }
+
+    private fun setActionBarTitleWithUsername() {
+        val userPreference = UserPreference(this)
+        val username = userPreference.getUserName()
+        if (username != null) {
+            supportActionBar?.title = "Welcome, $username"
+        } else {
+            supportActionBar?.title = "Welcome"
         }
     }
 
@@ -66,7 +78,7 @@ class CreateClassActivity : AppCompatActivity() {
         createClassViewModel.saveSchedule(
             context = this,
             className = className,
-            students = emptyList(),
+            students = emptyList(), // Sesuaikan jika ada daftar siswa
             subject = subject
         ) { success, message ->
             runOnUiThread {
@@ -79,5 +91,6 @@ class CreateClassActivity : AppCompatActivity() {
         }
     }
 }
+
 
 

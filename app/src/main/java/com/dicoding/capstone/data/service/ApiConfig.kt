@@ -42,7 +42,7 @@ interface ApiConfig {
         @Field("password") password: String
     ): Call<LoginResponse>
 
-    @POST("/classes")
+    @POST("classes")
     fun createClass(
         @Body classRequest: ClassRequest
     ): Call<ClassResponse>

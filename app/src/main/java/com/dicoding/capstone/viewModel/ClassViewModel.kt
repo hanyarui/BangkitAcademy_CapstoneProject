@@ -1,20 +1,22 @@
 package com.dicoding.capstone.viewModel
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.capstone.data.ClassDetails
 import com.dicoding.capstone.data.local.UserPreference
 import com.dicoding.capstone.data.service.ApiService
 import kotlinx.coroutines.launch
 
-class ClassViewModel(application: Application) : AndroidViewModel(application) {
+class ClassViewModel(context: Context) : ViewModel() {
     private val _classes = MutableLiveData<List<ClassDetails>>()
     val classes: LiveData<List<ClassDetails>> get() = _classes
 
-    private val userPreference = UserPreference(application.applicationContext)
+    private val userPreference = UserPreference(context)
 
     fun fetchClasses() {
         viewModelScope.launch {
@@ -31,3 +33,4 @@ class ClassViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }
+

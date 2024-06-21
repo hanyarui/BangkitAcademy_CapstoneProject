@@ -14,16 +14,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.capstone.adapter.ClassAdapter
-//import com.dicoding.capstone.adapter.ClassAdapter
-import com.dicoding.capstone.data.local.UserPreference
-//import com.dicoding.capstone.data.response.UserClassResponse
 import com.dicoding.capstone.databinding.FragmentHomeBinding
 import com.dicoding.capstone.ui.detail.CameraActivity
 import com.dicoding.capstone.ui.detail.ResultActivity
 import com.dicoding.capstone.util.ViewModelFactory
 import com.dicoding.capstone.viewModel.ClassViewModel
-
-//import com.dicoding.capstone.viewModel.ClassViewModel
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -37,14 +32,9 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        return root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val application = requireNotNull(this.activity).application
-        viewModel = ViewModelProvider(this, ViewModelFactory(application)).get(ClassViewModel::class.java)
+        // Menggunakan requireContext() untuk mendapatkan aplikasi konteks
+        val applicationContext = requireContext().applicationContext
+        viewModel = ViewModelProvider(this, ViewModelFactory(applicationContext)).get(ClassViewModel::class.java)
 
         binding.rvClass.layoutManager = LinearLayoutManager(requireContext())
 
@@ -54,18 +44,14 @@ class HomeFragment : Fragment() {
         })
 
         viewModel.fetchClasses()
+//
+        return root
     }
-
-//    private fun setActionBarTitleWithUsername() {
-//        val username = classViewModel.getUsername()
-//        (activity as? AppCompatActivity)?.supportActionBar?.title = username ?: "Homepage"
-//    }
-
 //        override fun onClassItemClick(item: UserClassResponse) {
 //        // Tampilkan dialog presensi saat item diklik
 //        showAttendanceDialog()
 //    }
-//
+
     private fun showAttendanceDialog() {
         val options = arrayOf("Gallery", "Camera")
         val builder = AlertDialog.Builder(requireContext())

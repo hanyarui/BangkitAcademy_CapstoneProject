@@ -5,15 +5,11 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.dicoding.capstone.databinding.ActivityCameraPermissionBinding
-import com.dicoding.capstone.data.theme.SettingPreference
 import com.dicoding.capstone.ui.MainActivity
-import com.dicoding.capstone.ui.tabLayout.ui.profile.ProfileViewModel
 
 class CameraPermissionActivity : AppCompatActivity() {
 
