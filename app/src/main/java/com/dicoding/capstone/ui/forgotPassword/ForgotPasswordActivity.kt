@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.capstone.R
 import com.dicoding.capstone.databinding.ActivityForgotPasswordBinding
-import com.dicoding.capstone.ui.auth.LoginActivity
+import com.dicoding.capstone.ui.auth.LoginUserActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -59,7 +59,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Toast.makeText(this, getString(R.string.otp_sent), Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, LoginActivity::class.java)
+                val intent = Intent(this, LoginUserActivity::class.java)
                 intent.putExtra("email", email)
                 startActivity(intent)
                 finish()

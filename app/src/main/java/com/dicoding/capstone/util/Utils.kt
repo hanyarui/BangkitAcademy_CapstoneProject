@@ -16,20 +16,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.io.OutputStream
 import java.text.SimpleDateFormat
-import java.util.Date
-import retrofit2.Callback
-import retrofit2.Call
 import java.util.Locale
 import android.util.Base64
-import com.dicoding.capstone.data.PredictionResponse
-import retrofit2.Response
-import com.dicoding.capstone.data.service.ApiClient
-import com.google.firebase.auth.FirebaseAuth
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 
 private const val FILENAME_FORMAT = "dd-MM-yyyy"
 
@@ -85,6 +74,18 @@ fun uriToFile(selectedImg: Uri, context: Context): File {
     } ?: throw IllegalArgumentException("Cannot open input stream for URI: $selectedImg")
 
     return myFile
+}
+
+fun uriToFilePredict(uri: Uri, context: Context): File {
+    val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+    val file = File(context.cacheDir, "temp_image.jpg") // Temp file di cache directory
+    val outputStream = FileOutputStream(file)
+    inputStream?.use { input ->
+        outputStream.use { output ->
+            input.copyTo(output)
+        }
+    }
+    return file
 }
 
 fun reduceFileSize(myFile: File): File {

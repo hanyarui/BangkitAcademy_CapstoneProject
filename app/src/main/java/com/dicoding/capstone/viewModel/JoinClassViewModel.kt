@@ -1,58 +1,44 @@
 package com.dicoding.capstone.viewModel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.dicoding.capstone.data.JoinClassRequest
+import com.dicoding.capstone.data.JoinClassResponse
+import com.dicoding.capstone.data.StudentRequest
+import com.dicoding.capstone.data.local.UserPreference
+import com.dicoding.capstone.data.service.ApiConfig
+import com.dicoding.capstone.data.service.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
+import retrofit2.Response
 
-class JoinClassViewModel(
-    private val auth: FirebaseAuth,
-    private val db: FirebaseFirestore
-) : ViewModel() {
+class JoinClassViewModel(private val api: ApiConfig, private val userPreference: UserPreference) : ViewModel() {
 
-    fun joinClass(classCode: String, callback: (Boolean, String) -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
+    private val _joinClassResult = MutableLiveData<JoinClassResponse>()
+    val joinClassResult: LiveData<JoinClassResponse> = _joinClassResult
+
+    fun joinClass(classCode: String) {
+        viewModelScope.launch {
             try {
-                val classQuerySnapshot = db.collection("classes")
-                    .whereEqualTo("classCode", classCode)
-                    .get()
-                    .await()
-
-                if (classQuerySnapshot.isEmpty) {
-                    callback(false, "Class not found")
-                    return@launch
-                }
-
-                val classDocument = classQuerySnapshot.documents[0]
-                val currentUser = auth.currentUser
-                val userEmail = currentUser?.email ?: "Unknown"
-                val userName = currentUser?.displayName ?: "Unknown"
-
-                val classData = classDocument.data?.toMutableMap()
-                val emailParticipants = classData?.get("emails") as? MutableList<String> ?: mutableListOf()
-                val nameParticipants = classData?.get("participants") as? MutableList<String> ?: mutableListOf()
-
-                if (currentUser != null) {
-                    emailParticipants.add(userEmail)
-                    classData!!["emailParticipants"] = emailParticipants
-
-                    nameParticipants.add(userName)
-                    classData["nameParticipants"] = nameParticipants
-
-                    db.collection("classes").document(classDocument.id)
-                        .set(classData)
-                        .await()
-
-                    callback(true, "Successfully joined the class")
+                val studentId = userPreference.getUserName()
+                if (studentId != null) {
+                    val request = JoinClassRequest(studentId)
+                    val response = api.joinClass(classCode, request)
+                    if (response.isSuccessful) {
+                        _joinClassResult.postValue(response.body())
+                    } else {
+                        _joinClassResult.postValue(JoinClassResponse(false, "Failed to join class"))
+                    }
                 } else {
-                    callback(false, "User not authenticated")
+                    _joinClassResult.postValue(JoinClassResponse(false, "Invalid student ID"))
                 }
             } catch (e: Exception) {
-                callback(false, "Failed to join class: ${e.message}")
+                _joinClassResult.postValue(JoinClassResponse(false, "Error: ${e.message}"))
             }
         }
     }
 }
+
+

@@ -14,15 +14,15 @@
 
         <ImageView
             android:id="@+id/ivPhoto"
-            android:layout_width="124dp"
-            android:layout_height="124dp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:src="@drawable/cuate"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvKelas"
+            android:id="@+id/tvClassName"
             style="@style/TextContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvPelajaran"
+            android:id="@+id/tvSubject"
             style="@style/TextContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,30 +42,18 @@
             android:text="@string/pelajaran"
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@id/ivPhoto"
-            app:layout_constraintTop_toBottomOf="@id/tvKelas" />
+            app:layout_constraintTop_toBottomOf="@id/tvClassName" />
 
         <TextView
-            android:id="@+id/tvJadwal"
-            style="@style/TextContent.Details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/jadwal"
-            app:layout_constraintStart_toEndOf="@+id/ivPhoto"
-            app:layout_constraintTop_toBottomOf="@id/tvPelajaran" />
-
-        <TextView
-            android:id="@+id/tvGuru"
+            android:id="@+id/tvClassCode"
             style="@style/TextContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
             android:text="@string/guru"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvJadwal" />
+            app:layout_constraintStart_toEndOf="@+id/ivPhoto" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

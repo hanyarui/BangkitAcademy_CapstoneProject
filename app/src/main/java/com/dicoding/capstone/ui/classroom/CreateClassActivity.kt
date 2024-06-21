@@ -2,38 +2,40 @@ package com.dicoding.capstone.ui.classroom
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.TextView
-import android.widget.Toast
+import android.util.Log
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.dicoding.capstone.R
-import com.dicoding.capstone.data.local.UserPreference
 import com.dicoding.capstone.databinding.ActivityCreateClassBinding
-import com.dicoding.capstone.ui.tabLayout.TabLayoutActivity
-import com.dicoding.capstone.util.ViewModelFactory
+import com.dicoding.capstone.data.local.UserPreference
+import com.dicoding.capstone.ui.tabLayout.HomepageActivity
+import com.dicoding.capstone.viewModel.CreateClassViewModel
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.FirebaseAuth
-import java.util.Calendar
+import java.util.*
 
 class CreateClassActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateClassBinding
 
-    private lateinit var tvDate: TextView
-    private lateinit var tvTime: TextView
-    private lateinit var cbRepeatWeekly: CheckBox
     private lateinit var btnSave: Button
     private lateinit var etKelas: TextInputEditText
     private lateinit var etMapel: TextInputEditText
 
-    private var selectedDate: Calendar? = null
-    private var selectedTime: Calendar? = null
-
+    // Inisialisasi ViewModel
     private val createClassViewModel: CreateClassViewModel by viewModels {
-        ViewModelFactory(FirebaseAuth.getInstance(), UserPreference(this))
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val viewModel = CreateClassViewModel()
+                viewModel.initialize(this@CreateClassActivity) // Inisialisasi dengan context
+                @Suppress("UNCHECKED_CAST")
+                return viewModel as T
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,64 +43,41 @@ class CreateClassActivity : AppCompatActivity() {
         binding = ActivityCreateClassBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        tvDate = findViewById(R.id.tvDate)
-        tvTime = findViewById(R.id.tvTime)
-        cbRepeatWeekly = findViewById(R.id.cbRepeatWeekly)
+        // Inisialisasi View
         btnSave = findViewById(R.id.btnKonfirmasi)
         etKelas = findViewById(R.id.etKelas)
         etMapel = findViewById(R.id.etMapel)
 
-        findViewById<Button>(R.id.btnDatePicker).setOnClickListener {
-            pickDate()
-        }
-
-        findViewById<Button>(R.id.btnTimePicker).setOnClickListener {
-            pickTime()
-        }
-
+        // Button Save
         btnSave.setOnClickListener {
             saveSchedule()
         }
     }
 
-    private fun pickDate() {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            selectedDate = Calendar.getInstance().apply {
-                set(selectedYear, selectedMonth, selectedDay)
-            }
-            tvDate.text = "${selectedDay}/${selectedMonth + 1}/${selectedYear}"
-        }, year, month, day).show()
-    }
-
-    private fun pickTime() {
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
-
-        TimePickerDialog(this, { _, selectedHour, selectedMinute ->
-            selectedTime = Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, selectedHour)
-                set(Calendar.MINUTE, selectedMinute)
-            }
-            tvTime.text = String.format("%02d:%02d", selectedHour, selectedMinute)
-        }, hour, minute, true).show()
-    }
-
     private fun saveSchedule() {
-        val kelas = etKelas.text.toString()
-        val mapel = etMapel.text.toString()
-        val repeatWeekly = cbRepeatWeekly.isChecked
+        val className = etKelas.text.toString()
+        val subject = etMapel.text.toString()
 
-        createClassViewModel.saveSchedule(kelas, mapel, selectedDate, selectedTime, repeatWeekly, emptyList(), emptyList()) { success, message ->
+        if (className.isEmpty() || subject.isEmpty()) {
+            Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        createClassViewModel.saveSchedule(
+            context = this,
+            className = className,
+            students = emptyList(),
+            subject = subject
+        ) { success, message ->
             runOnUiThread {
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                Log.d("CreateClassActivity", "Save schedule result: $message")
+                if (success) {
+                    startActivity(Intent(this, HomepageActivity::class.java))
+                }
             }
-            startActivity(Intent(this, TabLayoutActivity::class.java))
         }
     }
 }
+
+

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="12dp"
-    tools:context=".ui.classroom.JoinClassActivity">
+    tools:context=".ui.classroom.PresensiActivity">
 
     <TextView
         android:id="@+id/tvPage"
@@ -53,7 +53,7 @@
         style="@style/TextContent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/btn_signin"
         android:elevation="16dp"
         android:paddingVertical="12dp"
@@ -63,6 +63,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lytKelas"
-        app:layout_constraintWidth_percent="0.6" />
+        app:layout_constraintWidth_percent="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

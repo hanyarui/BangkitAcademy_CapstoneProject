@@ -2,32 +2,29 @@ package com.dicoding.capstone.ui.tabLayout
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.dicoding.capstone.R
-import com.dicoding.capstone.databinding.ActivityTabLayoutBinding
-import com.dicoding.capstone.ui.auth.LoginActivity
+import com.dicoding.capstone.data.local.UserPreference
+import com.dicoding.capstone.databinding.ActivityHomepageBinding
 import com.dicoding.capstone.ui.classroom.CreateClassActivity
 import com.dicoding.capstone.ui.classroom.JoinClassActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class TabLayoutActivity : AppCompatActivity() {
+class HomepageActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityTabLayoutBinding
+    private lateinit var binding: ActivityHomepageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityTabLayoutBinding.inflate(layoutInflater)
+        binding = ActivityHomepageBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.hide()
 
         val navView: BottomNavigationView = binding.navView
 
@@ -42,15 +39,7 @@ class TabLayoutActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-//        navView.setOnNavigationItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.navigation_add -> {
-//                    showAddClassDialog()
-//                    true // Menandakan bahwa item telah ditangani
-//                }
-//                else -> false // Biarkan Navigation Component menangani item lainnya
-//            }
-//        }
+        setActionBarTitleWithUsername()
 
         val btnAdd: FloatingActionButton = findViewById(R.id.btnAdd)
         btnAdd.setOnClickListener {
@@ -58,8 +47,27 @@ class TabLayoutActivity : AppCompatActivity() {
         }
     }
 
+    private fun setActionBarTitleWithUsername() {
+        val userPreference = UserPreference(this)
+        val username = userPreference.getUserName()
+        if (username != null) {
+            supportActionBar?.title = "$username"
+        } else {
+            supportActionBar?.title = "Homepage"
+        }
+    }
+
     private fun showAddClassDialog() {
-        val options = arrayOf("Gabung ke Kelas", "Buat Kelas Baru")
+        val userPreference = UserPreference(this)
+        val role = userPreference.getUserRole() // Mengambil role dari UserPreference
+
+        // Cek apakah role adalah teacher
+        val options = if (role == "teacher") {
+            arrayOf("Gabung ke Kelas", "Buat Kelas Baru")
+        } else {
+            arrayOf("Gabung ke Kelas")
+        }
+
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Tentukan Kelas")
             .setItems(options) { dialog, which ->
@@ -77,3 +85,4 @@ class TabLayoutActivity : AppCompatActivity() {
             .show()
     }
 }
+

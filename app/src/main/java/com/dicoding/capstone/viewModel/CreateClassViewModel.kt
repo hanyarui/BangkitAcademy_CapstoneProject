@@ -1,67 +1,69 @@
-package com.dicoding.capstone.ui.classroom
+package com.dicoding.capstone.viewModel
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.dicoding.capstone.data.ClassRequest
+import com.dicoding.capstone.data.local.UserPreference
+import com.dicoding.capstone.data.service.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import java.util.Calendar
-import java.util.UUID
 
 class CreateClassViewModel : ViewModel() {
 
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
+    private lateinit var userPreference: UserPreference
+
+    fun initialize(context: Context) {
+        userPreference = UserPreference(context)
+    }
 
     fun saveSchedule(
-        kelas: String,
-        mapel: String,
-        selectedDate: Calendar?,
-        selectedTime: Calendar?,
-        repeatWeekly: Boolean,
-        emailParticipants: List<String>,
-        nameParticipants: List<String>,
+        context: Context,
+        className: String,
+        students: List<String> = emptyList(),
+        subject: String,
         callback: (Boolean, String) -> Unit
     ) {
-        if (kelas.isEmpty() || mapel.isEmpty() || selectedDate == null || selectedTime == null) {
+        if (className.isEmpty() || subject.isEmpty()) {
             callback(false, "Please fill all the fields")
             return
         }
 
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            val userName = currentUser.displayName ?: "Unknown"
-            val teacherEmail = currentUser.email ?: "Unknown"
-            val classCode = UUID.randomUUID().toString().substring(0, 8) // Generate a unique class code
+        val token = userPreference.getToken()
+        if (token == null) {
+            callback(false, "User not authenticated")
+            return
+        }
 
-            val classData = hashMapOf(
-                "kelas" to kelas,
-                "mapel" to mapel,
-                "date" to selectedDate.time,
-                "time" to selectedTime.time,
-                "repeatWeekly" to repeatWeekly,
-                "teacherName" to userName,
-                "teacherEmail" to teacherEmail,
-                "classCode" to classCode,
-                "emailParticipants" to emailParticipants,
-                "nameParticipants" to nameParticipants,
-
-            )
-
+        // Retrieve user info from UserPreference directly
+        val teacherUsername = userPreference.getUserName()
+        if (teacherUsername != null) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    db.collection("classes")
-                        .add(classData)
-                        .await()
-                    callback(true, "Class created successfully with code: $classCode")
+                    val classRequest = ClassRequest(
+                        studentId = students,
+                        teacherUsername = teacherUsername,
+                        subject = subject,
+                        className = className
+                    )
+
+                    val response = ApiService.instance.createClass(classRequest).execute()
+
+                    if (response.isSuccessful && response.body() != null) {
+                        val classResponse = response.body()!!
+                        callback(true, "Class created successfully with code: ${classResponse.classCode}")
+                        Log.d("CreateClassViewModel", "Class created successfully with code: ${classResponse.classCode}")
+                    } else {
+                        callback(false, "Failed to create class: ${response.message()}")
+                    }
                 } catch (e: Exception) {
                     callback(false, "Failed to create class: ${e.message}")
                 }
             }
         } else {
-            callback(false, "User not authenticated")
+            callback(false, "Failed to retrieve teacher username")
         }
     }
 }
+

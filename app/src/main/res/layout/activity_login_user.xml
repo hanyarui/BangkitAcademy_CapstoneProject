@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="12dp"
-    tools:context=".ui.auth.LoginActivity">
+    tools:context=".ui.auth.LoginUserActivity">
 
         <TextView
             android:id="@+id/tvPage"
@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
-            android:text="Welcome back"
+            android:text="@string/welcome_back"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/email_address"
+            android:text="@string/username"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvPage"/>
 
@@ -33,7 +33,7 @@
             android:id="@+id/lytEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/ic_email"
+            app:startIconDrawable="@drawable/ic_person"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvEmail">
@@ -43,7 +43,7 @@
                 style="@style/TextContent.Details"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/enter_your_email_address"/>
+                android:hint="@string/masukkan_username_anda"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

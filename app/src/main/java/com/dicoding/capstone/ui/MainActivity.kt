@@ -1,16 +1,14 @@
 package com.dicoding.capstone.ui
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.dicoding.capstone.R
 import com.dicoding.capstone.databinding.ActivityMainBinding
-import com.dicoding.capstone.ui.auth.LoginActivity
+import com.dicoding.capstone.ui.auth.LoginAdminActivity
+import com.dicoding.capstone.ui.auth.LoginUserActivity
 import com.dicoding.capstone.ui.auth.RegisterActivity
 
 class MainActivity : AppCompatActivity() {
@@ -23,14 +21,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        toSignInPage()
+        toSignInUserPage()
+        toSignInAdminPage()
         toSignUpPage()
     }
 
-    private fun toSignInPage() {
-        val toSignIn = findViewById<AppCompatButton>(R.id.btnSignIn)
+    private fun toSignInUserPage() {
+        val toSignIn = findViewById<AppCompatButton>(R.id.btnSignInUser)
         toSignIn.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, LoginUserActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun toSignInAdminPage() {
+        val toSignIn = findViewById<AppCompatButton>(R.id.btnSignInAdmin)
+        toSignIn.setOnClickListener {
+            val intent = Intent(this, LoginAdminActivity::class.java)
             startActivity(intent)
         }
     }
